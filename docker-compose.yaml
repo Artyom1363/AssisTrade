@@ -1,0 +1,30 @@
+services:
+  transactions:
+    build:
+      context: ./src/transactions
+      dockerfile: Dockerfile
+    container_name: transactions-container
+    develop:
+      watch:
+        - path: ./src/transactions
+          action: sync
+          target: /transactions
+          ignore:
+            - .venv/
+            - __pycache__/
+        - path: ./src/transactions/**/*.py
+          action: sync
+          target: /transactions
+    ports:
+      - "8000:8000"
+    command: uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    env_file:
+      - ./src/transactions/.env
+    volumes:
+      - ./src/transactions:/transactions
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
