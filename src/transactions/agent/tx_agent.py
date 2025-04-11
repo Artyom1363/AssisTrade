@@ -2,15 +2,12 @@ import logfire
 from pydantic_ai import Agent
 from pydantic_ai.models.mistral import MistralModel
 from pydantic_ai.providers.mistral import MistralProvider
+from pydantic_ai.usage import UsageLimits
 from schemas.transaction_schemas import (
-    SupervisorResponse,
-    TransactionDict,
-    TransactionNER,
-    TransactionResult,
+    TransactionModel,
+    MessageRequest,
 )
-
-from agent.prompts import SupervisorPrompt, TransactionNERPrompt
-
+from agent.prompts import TX_AGENT_PROMPT
 
 class TransactionAgent:
     def __init__(self, model: str, llm_token: str, logifre_token: str = None):
@@ -23,31 +20,17 @@ class TransactionAgent:
         logfire.configure(token=logifre_token)
         logfire.instrument()
 
-        self.supervisor = Agent(
+        self.agent = Agent(
             self.model,
-            result_type=SupervisorResponse,
-            system_prompt=SupervisorPrompt,
-            retries=5,
-            instrument=True,
-        )
-        self.ner_agent = Agent(
-            self.model,
-            result_type=TransactionNER,
-            system_prompt=TransactionNERPrompt,
+            result_type=TransactionModel,
+            system_prompt=TX_AGENT_PROMPT,
             retries=5,
             instrument=True,
         )
 
-    async def process_message(self, message: str):
-        decision_response = await self.supervisor.run(user_prompt=message)
+        
+    async def process_message(self, message: MessageRequest)-> TransactionModel:
+        decision_response = await self.agent.run(user_prompt=message,
+                                                     usage_limits=UsageLimits(response_tokens_limit=1000))
         decision = decision_response.data
-
-        if decision.decision == "@BuildTransaction":
-            ner_response = await self.ner_agent.run(user_prompt=message)
-            ner = ner_response.data
-            transaction = TransactionDict(to=ner.receiver, value=ner.value)
-            return TransactionResult(
-                status="Build", transaction=transaction, reasoning=decision.reasoning
-            )
-        else:
-            return TransactionResult(status="Reject", reasoning=decision.reasoning)
+        return decision
