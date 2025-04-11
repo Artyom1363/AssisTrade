@@ -4,10 +4,12 @@ from pydantic_ai.models.mistral import MistralModel
 from pydantic_ai.providers.mistral import MistralProvider
 from pydantic_ai.usage import UsageLimits
 from schemas.transaction_schemas import (
-    TransactionModel,
     MessageRequest,
+    TransactionModel,
 )
+
 from agent.prompts import TX_AGENT_PROMPT
+
 
 class TransactionAgent:
     def __init__(self, model: str, llm_token: str, logifre_token: str = None):
@@ -28,9 +30,9 @@ class TransactionAgent:
             instrument=True,
         )
 
-        
-    async def process_message(self, message: MessageRequest)-> TransactionModel:
-        decision_response = await self.agent.run(user_prompt=message,
-                                                     usage_limits=UsageLimits(response_tokens_limit=1000))
+    async def process_message(self, message: MessageRequest) -> TransactionModel:
+        decision_response = await self.agent.run(
+            user_prompt=message, usage_limits=UsageLimits(response_tokens_limit=1000)
+        )
         decision = decision_response.data
         return decision
