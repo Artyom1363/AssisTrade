@@ -1,5 +1,8 @@
 # RAG
 
+Architecture:
+
+![Architecture](docs/imgs/architecture.png)
 
 To run RAG follow those steps:
 
