@@ -100,7 +100,7 @@
 
 ### **2.2. Блок-схема решения**
 
-![blocksheme](blocksheme.png)
+![blocksheme](imgs/blocksheme.png)
 
 
 ### **3.1. Разработка RAG**
