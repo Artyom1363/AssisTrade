@@ -2,7 +2,7 @@ import os
 
 from agent.agents import SupervisorAgent
 from dotenv import load_dotenv
-from schemas.models import SupervisorModel, MessageRequest
+from schemas.models import SupervisorModel
 
 load_dotenv()
 

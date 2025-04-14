@@ -5,11 +5,12 @@ from pydantic_ai.providers.google_gla import GoogleGLAProvider
 from pydantic_ai.usage import UsageLimits
 from schemas.models import (
     MessageRequest,
+    SmallTalkModel,
     SupervisorModel,
     TransactionModel,
-    SmallTalkModel
 )
-from agent.prompts import TX_AGENT_PROMPT, SUPERVISOR_PROMPT, SMALL_TALK_PROMPT
+
+from agent.prompts import SMALL_TALK_PROMPT, SUPERVISOR_PROMPT, TX_AGENT_PROMPT
 
 
 class SupervisorAgent:
@@ -18,11 +19,11 @@ class SupervisorAgent:
             model_name=model,
             provider=GoogleGLAProvider(
                 api_key=llm_token,
-            )
+            ),
         )
         logfire.configure(token=logifre_token)
         logfire.instrument()
-    
+
         self.tx_agent = Agent(
             self.model,
             result_type=TransactionModel,
@@ -47,21 +48,21 @@ class SupervisorAgent:
             retries=5,
             instrument=True,
         )
-    
+
     async def build_transaction(self, message: MessageRequest) -> TransactionModel:
         response = await self.tx_agent.run(
-            user_prompt=message.message, 
-            usage_limits=UsageLimits(response_tokens_limit=1000)
+            user_prompt=message.message,
+            usage_limits=UsageLimits(response_tokens_limit=1000),
         )
         return response.data
 
     async def small_talk(self, message: MessageRequest) -> SmallTalkModel:
         response = await self.small_talk_agent.run(
-            user_prompt=message.message, 
-            usage_limits=UsageLimits(response_tokens_limit=1000)
+            user_prompt=message.message,
+            usage_limits=UsageLimits(response_tokens_limit=1000),
         )
         return response.data
-    
+
     async def process_message(self, message: MessageRequest) -> SupervisorModel:
         response = await self.supervisor_agent.run(
             user_prompt=message, usage_limits=UsageLimits(response_tokens_limit=1000)

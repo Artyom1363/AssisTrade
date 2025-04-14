@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from schemas.models import SupervisorModel, MessageRequest
+from schemas.models import SupervisorModel
 from services.agent_service import agent_service
 
 router = APIRouter()
