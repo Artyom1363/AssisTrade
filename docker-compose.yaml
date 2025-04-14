@@ -1,27 +1,27 @@
 services:
-  transactions:
+  agents:
     build:
-      context: ./src/transactions
+      context: ./src/agents
       dockerfile: Dockerfile
-    container_name: transactions-container
+    container_name: agents-container
     develop:
       watch:
-        - path: ./src/transactions
+        - path: ./src/agents
           action: sync
-          target: /transactions
+          target: /agents
           ignore:
             - .venv/
             - __pycache__/
-        - path: ./src/transactions/**/*.py
+        - path: ./src/agents/**/*.py
           action: sync
-          target: /transactions
+          target: /agents
     ports:
       - "8000:8000"
     command: uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     env_file:
-      - ./src/transactions/.env
+      - ./src/agents/.env
     volumes:
-      - ./src/transactions:/transactions
+      - ./src/agents:/agents
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]

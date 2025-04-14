@@ -1,10 +1,10 @@
 FROM python:3.10-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-WORKDIR /transactions
+WORKDIR /agents
 
-COPY . /transactions/
+COPY . /agents/
 RUN uv sync --frozen --no-install-project
-ADD . /custom_policy
+ADD . /agents
 
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \

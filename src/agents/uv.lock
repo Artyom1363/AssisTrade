@@ -3,6 +3,27 @@ revision = 1
 requires-python = ">=3.10"
 
 [[package]]
+name = "agents"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "fastapi" },
+    { name = "logfire" },
+    { name = "pydantic" },
+    { name = "pydantic-ai" },
+    { name = "python-dotenv" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastapi", specifier = ">=0.115.12" },
+    { name = "logfire", specifier = ">=3.14.0" },
+    { name = "pydantic", specifier = ">=2.11.3" },
+    { name = "pydantic-ai", specifier = ">=0.0.55" },
+    { name = "python-dotenv", specifier = ">=1.1.0" },
+]
+
+[[package]]
 name = "annotated-types"
 version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
@@ -607,7 +628,7 @@ wheels = [
 
 [[package]]
 name = "openai"
-version = "1.72.0"
+version = "1.73.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -619,9 +640,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/41/56/41de36c0e9f787c406211552ecf2ca4fba3db900207c5c158c4dc67263fc/openai-1.72.0.tar.gz", hash = "sha256:f51de971448905cc90ed5175a5b19e92fd94e31f68cde4025762f9f5257150db", size = 426061 }
+sdist = { url = "https://files.pythonhosted.org/packages/1c/69/d476383a79f323df084cc8ce980e7852eccf994594feabca8219eea40b79/openai-1.73.0.tar.gz", hash = "sha256:b58ea39ba589de07db85c9905557ac12d2fc77600dcd2b92a08b99c9a3dce9e0", size = 426942 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/03/1c/a0870f31bd71244c8c3a82e171677d9a148a8ea1cb157308cb9e06a41a37/openai-1.72.0-py3-none-any.whl", hash = "sha256:34f5496ba5c8cb06c592831d69e847e2d164526a2fb92afdc3b5cf2891c328c3", size = 643863 },
+    { url = "https://files.pythonhosted.org/packages/23/17/6f83e6c9d632eb9707663e01f9e74fdd604536fb3ff12ec42da94daf19df/openai-1.73.0-py3-none-any.whl", hash = "sha256:f52d1f673fb4ce6069a40d544a80fcb062eba1b3f489004fac4f9923a074c425", size = 644391 },
 ]
 
 [[package]]
@@ -1151,14 +1172,14 @@ wheels = [
 
 [[package]]
 name = "starlette"
-version = "0.46.1"
+version = "0.46.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/04/1b/52b27f2e13ceedc79a908e29eac426a63465a1a01248e5f24aa36a62aeb3/starlette-0.46.1.tar.gz", hash = "sha256:3c88d58ee4bd1bb807c0d1acb381838afc7752f9ddaec81bbe4383611d833230", size = 2580102 }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/20/08dfcd9c983f6a6f4a1000d934b9e6d626cff8d2eeb77a89a68eef20a2b7/starlette-0.46.2.tar.gz", hash = "sha256:7f7361f34eed179294600af672f565727419830b54b7b084efe44bb82d2fccd5", size = 2580846 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/4b/528ccf7a982216885a1ff4908e886b8fb5f19862d1962f56a3fce2435a70/starlette-0.46.1-py3-none-any.whl", hash = "sha256:77c74ed9d2720138b25875133f3a2dae6d854af2ec37dceb56aef370c1d8a227", size = 71995 },
+    { url = "https://files.pythonhosted.org/packages/8b/0c/9d30a4ebeb6db2b25a841afbb80f6ef9a854fc3b41be131d249a977b4959/starlette-0.46.2-py3-none-any.whl", hash = "sha256:595633ce89f8ffa71a015caed34a5b2dc1c0cdb3f0f1fbd1e69339cf2abeec35", size = 72037 },
 ]
 
 [[package]]
@@ -1238,29 +1259,6 @@ wheels = [
 ]
 
 [[package]]
-name = "transactions"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "fastapi" },
-    { name = "logfire" },
-    { name = "pydantic" },
-    { name = "pydantic-ai" },
-    { name = "python-dotenv" },
-    { name = "uvicorn" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fastapi", specifier = ">=0.115.12" },
-    { name = "logfire", specifier = ">=3.14.0" },
-    { name = "pydantic", specifier = ">=2.11.3" },
-    { name = "pydantic-ai", specifier = ">=0.0.55" },
-    { name = "python-dotenv", specifier = ">=1.1.0" },
-    { name = "uvicorn", specifier = ">=0.34.0" },
-]
-
-[[package]]
 name = "types-requests"
 version = "2.32.0.20250328"
 source = { registry = "https://pypi.org/simple" }
@@ -1304,16 +1302,16 @@ wheels = [
 
 [[package]]
 name = "uvicorn"
-version = "0.34.0"
+version = "0.34.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "h11" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4b/4d/938bd85e5bf2edeec766267a5015ad969730bb91e31b44021dfe8b22df6c/uvicorn-0.34.0.tar.gz", hash = "sha256:404051050cd7e905de2c9a7e61790943440b3416f49cb409f965d9dcd0fa73e9", size = 76568 }
+sdist = { url = "https://files.pythonhosted.org/packages/86/37/dd92f1f9cedb5eaf74d9999044306e06abe65344ff197864175dbbd91871/uvicorn-0.34.1.tar.gz", hash = "sha256:af981725fc4b7ffc5cb3b0e9eda6258a90c4b52cb2a83ce567ae0a7ae1757afc", size = 76755 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/61/14/33a3a1352cfa71812a3a21e8c9bfb83f60b0011f5e36f2b1399d51928209/uvicorn-0.34.0-py3-none-any.whl", hash = "sha256:023dc038422502fa28a09c7a30bf2b6991512da7dcdb8fd35fe57cfc154126f4", size = 62315 },
+    { url = "https://files.pythonhosted.org/packages/5f/38/a5801450940a858c102a7ad9e6150146a25406a119851c993148d56ab041/uvicorn-0.34.1-py3-none-any.whl", hash = "sha256:984c3a8c7ca18ebaad15995ee7401179212c59521e67bfc390c07fa2b8d2e065", size = 62404 },
 ]
 
 [[package]]
