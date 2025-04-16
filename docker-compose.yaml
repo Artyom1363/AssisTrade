@@ -1,0 +1,30 @@
+services:
+  agents:
+    build:
+      context: ./src/agents
+      dockerfile: Dockerfile
+    container_name: agents-container
+    develop:
+      watch:
+        - path: ./src/agents
+          action: sync
+          target: /agents
+          ignore:
+            - .venv/
+            - __pycache__/
+        - path: ./src/agents/**/*.py
+          action: sync
+          target: /agents
+    ports:
+      - "8000:8000"
+    command: uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    env_file:
+      - ./src/agents/.env
+    volumes:
+      - ./src/agents:/agents
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
