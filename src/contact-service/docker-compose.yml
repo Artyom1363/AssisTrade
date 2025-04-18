@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: telegram-contacts-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - db-data:/app/db
+    environment:
+      - DATABASE_URL=sqlite:///./db/contacts.db
+    restart: always
+
+volumes:
+  db-data:
+    name: telegram-contacts-db-data
