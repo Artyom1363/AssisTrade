@@ -141,6 +141,26 @@ async def delete_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
             "data": {}
         }
 
+# Get all contacts endpoint
+@app.get("/contacts/all")
+async def get_all_contacts(db: Session = Depends(get_db)):
+    """
+    Get all contacts from the database
+    
+    Returns a list of all contacts
+    """
+    try:
+        repo = ContactRepository(db)
+        result = repo.get_all_contacts()
+        
+        return result
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to retrieve contacts: {str(e)}",
+            "data": {}
+        }
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8002, reload=True)

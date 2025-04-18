@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 from ..models.contacts import Contact
 
@@ -75,6 +75,37 @@ class ContactRepository:
                 "wallet_id": contact.wallet_id
             }
         }
+        
+    def get_all_contacts(self) -> Dict[str, Any]:
+        """
+        Get all contacts from database
+        
+        Returns dict with success status and list of contacts
+        """
+        try:
+            contacts = self.db.query(Contact).all()
+            
+            contacts_list = []
+            for contact in contacts:
+                contacts_list.append({
+                    "telegram_id": contact.telegram_id,
+                    "user_name": contact.user_name,
+                    "wallet_id": contact.wallet_id
+                })
+            
+            return {
+                "success": True,
+                "message": f"Found {len(contacts_list)} contacts",
+                "data": {
+                    "contacts": contacts_list
+                }
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "message": f"Error retrieving contacts: {str(e)}",
+                "data": {}
+            }
 
     def delete_contact(self, telegram_id: str, user_name: str) -> Dict[str, Any]:
         """
