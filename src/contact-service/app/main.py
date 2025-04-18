@@ -43,13 +43,13 @@ async def add_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
     """
     Add a new contact with specified data:
     
-    - telegram_id: Telegram user identifier
-    - user_name: Username
+    - user_tg_id: Telegram user identifier
+    - contact_name: Contact name
     - wallet_id: Wallet identifier
     """
     try:
         # Validate required fields
-        for field in ['telegram_id', 'user_name', 'wallet_id']:
+        for field in ['user_tg_id', 'contact_name', 'wallet_id']:
             if field not in data or not data[field]:
                 return {
                     "success": False,
@@ -59,8 +59,8 @@ async def add_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
         
         repo = ContactRepository(db)
         result = repo.create_contact(
-            telegram_id=data['telegram_id'],
-            user_name=data['user_name'],
+            user_tg_id=data['user_tg_id'],
+            contact_name=data['contact_name'],
             wallet_id=data['wallet_id']
         )
         
@@ -76,17 +76,17 @@ async def add_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
         }
 
 # Get contact endpoint
-@app.post("/contacts/get")
-async def get_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
+@app.post("/contacts/find")
+async def find_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
     """
-    Get contact data by telegram_id and user_name:
+    Get contact data by user_tg_id and contact_name:
     
-    - telegram_id: Telegram user identifier
-    - user_name: Username
+    - user_tg_id: Telegram user identifier
+    - contact_name: Contact name
     """
     try:
         # Validate required fields
-        for field in ['telegram_id', 'user_name']:
+        for field in ['user_tg_id', 'contact_name']:
             if field not in data or not data[field]:
                 return {
                     "success": False,
@@ -96,15 +96,15 @@ async def get_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
         
         repo = ContactRepository(db)
         result = repo.get_contact(
-            telegram_id=data['telegram_id'],
-            user_name=data['user_name']
+            user_tg_id=data['user_tg_id'],
+            contact_name=data['contact_name']
         )
         
         return result
     except Exception as e:
         return {
             "success": False,
-            "message": f"Failed to get contact: {str(e)}",
+            "message": f"Failed to find contact: {str(e)}",
             "data": {}
         }
 
@@ -112,14 +112,14 @@ async def get_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
 @app.post("/contacts/delete")
 async def delete_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
     """
-    Delete contact by telegram_id and user_name:
+    Delete contact by user_tg_id and contact_name:
     
-    - telegram_id: Telegram user identifier
-    - user_name: Username
+    - user_tg_id: Telegram user identifier
+    - contact_name: Contact name
     """
     try:
         # Validate required fields
-        for field in ['telegram_id', 'user_name']:
+        for field in ['user_tg_id', 'contact_name']:
             if field not in data or not data[field]:
                 return {
                     "success": False,
@@ -129,8 +129,8 @@ async def delete_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
         
         repo = ContactRepository(db)
         result = repo.delete_contact(
-            telegram_id=data['telegram_id'],
-            user_name=data['user_name']
+            user_tg_id=data['user_tg_id'],
+            contact_name=data['contact_name']
         )
         
         return result
@@ -141,17 +141,25 @@ async def delete_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
             "data": {}
         }
 
-# Get all contacts endpoint
-@app.get("/contacts/all")
-async def get_all_contacts(db: Session = Depends(get_db)):
+# Get user contacts endpoint
+@app.post("/contacts/list")
+async def list_user_contacts(data: Dict[str, Any], db: Session = Depends(get_db)):
     """
-    Get all contacts from the database
+    Get all contacts for a specific user
     
-    Returns a list of all contacts
+    - user_tg_id: Telegram user identifier
     """
     try:
+        # Validate required fields
+        if 'user_tg_id' not in data or not data['user_tg_id']:
+            return {
+                "success": False,
+                "message": "Missing required field: user_tg_id",
+                "data": {}
+            }
+        
         repo = ContactRepository(db)
-        result = repo.get_all_contacts()
+        result = repo.get_user_contacts(user_tg_id=data['user_tg_id'])
         
         return result
     except Exception as e:
@@ -160,6 +168,7 @@ async def get_all_contacts(db: Session = Depends(get_db)):
             "message": f"Failed to retrieve contacts: {str(e)}",
             "data": {}
         }
+
 
 if __name__ == "__main__":
     import uvicorn

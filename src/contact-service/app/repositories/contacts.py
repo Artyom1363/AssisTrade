@@ -8,7 +8,7 @@ class ContactRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create_contact(self, telegram_id: str, user_name: str, wallet_id: str) -> Dict[str, Any]:
+    def create_contact(self, user_tg_id: str, contact_name: str, wallet_id: str) -> Dict[str, Any]:
         """
         Create a new contact
         
@@ -16,8 +16,8 @@ class ContactRepository:
         """
         try:
             db_contact = Contact(
-                telegram_id=telegram_id,
-                user_name=user_name,
+                user_tg_id=user_tg_id,
+                contact_name=contact_name,
                 wallet_id=wallet_id
             )
             self.db.add(db_contact)
@@ -28,8 +28,8 @@ class ContactRepository:
                 "success": True,
                 "message": "Contact added successfully",
                 "data": {
-                    "telegram_id": db_contact.telegram_id,
-                    "user_name": db_contact.user_name,
+                    "user_tg_id": db_contact.user_tg_id,
+                    "contact_name": db_contact.contact_name,
                     "wallet_id": db_contact.wallet_id
                 }
             }
@@ -37,7 +37,7 @@ class ContactRepository:
             self.db.rollback()
             return {
                 "success": False,
-                "message": f"Contact with telegram_id={telegram_id} and user_name={user_name} already exists",
+                "message": f"Contact with user_tg_id={user_tg_id} and contact_name={contact_name} already exists",
                 "data": {}
             }
         except Exception as e:
@@ -48,21 +48,21 @@ class ContactRepository:
                 "data": {}
             }
 
-    def get_contact(self, telegram_id: str, user_name: str) -> Dict[str, Any]:
+    def get_contact(self, user_tg_id: str, contact_name: str) -> Dict[str, Any]:
         """
-        Get contact by telegram_id and user_name
+        Get contact by user_tg_id and contact_name
         
         Returns dict with success status and contact data or error message
         """
         contact = self.db.query(Contact).filter(
-            Contact.telegram_id == telegram_id,
-            Contact.user_name == user_name
+            Contact.user_tg_id == user_tg_id,
+            Contact.contact_name == contact_name
         ).first()
         
         if not contact:
             return {
                 "success": False,
-                "message": f"Contact with telegram_id={telegram_id} and user_name={user_name} not found",
+                "message": f"Contact with user_tg_id={user_tg_id} and contact_name={contact_name} not found",
                 "data": {}
             }
         
@@ -70,12 +70,45 @@ class ContactRepository:
             "success": True,
             "message": "Contact found",
             "data": {
-                "telegram_id": contact.telegram_id,
-                "user_name": contact.user_name,
+                "user_tg_id": contact.user_tg_id,
+                "contact_name": contact.contact_name,
                 "wallet_id": contact.wallet_id
             }
         }
         
+    def get_user_contacts(self, user_tg_id: str) -> Dict[str, Any]:
+        """
+        Get all contacts for a specific user by user_tg_id
+        
+        Returns dict with success status and list of contacts
+        """
+        try:
+            contacts = self.db.query(Contact).filter(
+                Contact.user_tg_id == user_tg_id
+            ).all()
+            
+            contacts_list = []
+            for contact in contacts:
+                contacts_list.append({
+                    "user_tg_id": contact.user_tg_id,
+                    "contact_name": contact.contact_name,
+                    "wallet_id": contact.wallet_id
+                })
+            
+            return {
+                "success": True,
+                "message": f"Found {len(contacts_list)} contacts for user {user_tg_id}",
+                "data": {
+                    "contacts": contacts_list
+                }
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "message": f"Error retrieving contacts: {str(e)}",
+                "data": {}
+            }
+    
     def get_all_contacts(self) -> Dict[str, Any]:
         """
         Get all contacts from database
@@ -88,8 +121,8 @@ class ContactRepository:
             contacts_list = []
             for contact in contacts:
                 contacts_list.append({
-                    "telegram_id": contact.telegram_id,
-                    "user_name": contact.user_name,
+                    "user_tg_id": contact.user_tg_id,
+                    "contact_name": contact.contact_name,
                     "wallet_id": contact.wallet_id
                 })
             
@@ -107,21 +140,21 @@ class ContactRepository:
                 "data": {}
             }
 
-    def delete_contact(self, telegram_id: str, user_name: str) -> Dict[str, Any]:
+    def delete_contact(self, user_tg_id: str, contact_name: str) -> Dict[str, Any]:
         """
-        Delete contact by telegram_id and user_name
+        Delete contact by user_tg_id and contact_name
         
         Returns dict with success status and message
         """
         contact = self.db.query(Contact).filter(
-            Contact.telegram_id == telegram_id,
-            Contact.user_name == user_name
+            Contact.user_tg_id == user_tg_id,
+            Contact.contact_name == contact_name
         ).first()
         
         if not contact:
             return {
                 "success": False,
-                "message": f"Contact with telegram_id={telegram_id} and user_name={user_name} not found",
+                "message": f"Contact with user_tg_id={user_tg_id} and contact_name={contact_name} not found",
                 "data": {}
             }
         
