@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 import json
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from .models.database import engine, Base, get_db
 from .models.contacts import Contact
@@ -76,8 +76,12 @@ async def add_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
         }
 
 # Get contact endpoint
-@app.post("/contacts/find")
-async def find_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
+@app.get("/contacts/find")
+async def find_contact(
+    user_tg_id: str, 
+    contact_name: str,
+    db: Session = Depends(get_db)
+):
     """
     Get contact data by user_tg_id and contact_name:
     
@@ -85,19 +89,18 @@ async def find_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
     - contact_name: Contact name
     """
     try:
-        # Validate required fields
-        for field in ['user_tg_id', 'contact_name']:
-            if field not in data or not data[field]:
-                return {
-                    "success": False,
-                    "message": f"Missing required field: {field}",
-                    "data": {}
-                }
+        # Validate required parameters
+        if not user_tg_id or not contact_name:
+            return {
+                "success": False,
+                "message": "Missing required parameters: user_tg_id and contact_name must be provided",
+                "data": {}
+            }
         
         repo = ContactRepository(db)
         result = repo.get_contact(
-            user_tg_id=data['user_tg_id'],
-            contact_name=data['contact_name']
+            user_tg_id=user_tg_id,
+            contact_name=contact_name
         )
         
         return result
@@ -142,24 +145,27 @@ async def delete_contact(data: Dict[str, Any], db: Session = Depends(get_db)):
         }
 
 # Get user contacts endpoint
-@app.post("/contacts/list")
-async def list_user_contacts(data: Dict[str, Any], db: Session = Depends(get_db)):
+@app.get("/contacts/list")
+async def list_user_contacts(
+    user_tg_id: str,
+    db: Session = Depends(get_db)
+):
     """
     Get all contacts for a specific user
     
     - user_tg_id: Telegram user identifier
     """
     try:
-        # Validate required fields
-        if 'user_tg_id' not in data or not data['user_tg_id']:
+        # Validate required parameter
+        if not user_tg_id:
             return {
                 "success": False,
-                "message": "Missing required field: user_tg_id",
+                "message": "Missing required parameter: user_tg_id",
                 "data": {}
             }
         
         repo = ContactRepository(db)
-        result = repo.get_user_contacts(user_tg_id=data['user_tg_id'])
+        result = repo.get_user_contacts(user_tg_id=user_tg_id)
         
         return result
     except Exception as e:
