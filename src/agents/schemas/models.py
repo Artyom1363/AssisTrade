@@ -23,8 +23,7 @@ class TransactionDict(BaseModel):
 
 class TransactionModel(BaseModel):
     """
-    Модель для получения ответа о решении агента супервизора
-    и принятии решения об отправке
+    Модель для получения решения об отправке транзакции и её формирования
     """
 
     decision: Literal["BuildTransaction", "RejectTransaction"]
@@ -35,6 +34,15 @@ class TransactionModel(BaseModel):
 class SmallTalkModel(BaseModel):
     response: str
 
+class ChainDataModel(BaseModel):
+    """
+    Модель для получения ответа агента с MCP сервером
+    и обращениями в блокчейн
+    """
+
+    reasoning: str
+    act: str
+    response: str
 
 class SupervisorModel(BaseModel):
     """
@@ -43,6 +51,7 @@ class SupervisorModel(BaseModel):
     """
 
     reasoning: str
-    act: Literal["build_transaction", "small_talk", "out_of_topic"]
+    act: Literal["build_transaction", "small_talk", "out_of_topic", "chain_data"]
     tx: Optional[TransactionModel] = None
     small_talk: Optional[SmallTalkModel] = None
+    chain_data: Optional[ChainDataModel] = None

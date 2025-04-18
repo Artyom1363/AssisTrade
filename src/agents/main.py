@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from routes.transactions import router
+from src.agents.routes.agents import router
 
 load_dotenv()
 
