@@ -3,9 +3,9 @@ version: '3.8'
 services:
   api:
     build: .
-    container_name: telegram-contacts-api
+    container_name: contacts-service-api
     ports:
-      - "8000:8000"
+      - "8002:8002"
     volumes:
       - ./app:/app/app
       - db-data:/app/db
@@ -15,4 +15,4 @@ services:
 
 volumes:
   db-data:
-    name: telegram-contacts-db-data
+    name: contacts-db-data
