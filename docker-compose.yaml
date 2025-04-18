@@ -28,3 +28,28 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
+
+  # Add your contact service here
+  contacts:
+    build:
+      context: ./src/contact-service
+      dockerfile: Dockerfile
+    container_name: contacts-service-api
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./src/contact-service/app:/app/app
+      - contacts-db-data:/app/db
+    environment:
+      - DATABASE_URL=sqlite:///./db/contacts.db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+# Add the volume for contacts database
+volumes:
+  contacts-db-data:
+    name: contacts-db-data
