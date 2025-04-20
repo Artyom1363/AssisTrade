@@ -1,0 +1,45 @@
+from typing import List, Optional
+from pydantic import BaseModel, Field
+import uuid
+
+class AgentCard(BaseModel):
+    """
+    Описание одного агента — его имя, id,
+    краткое описание и поддерживаемые действия.
+    """
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    description: Optional[str] = None
+    tool: Optional[str] = None
+    response: str
+
+
+class AgentCatalog(BaseModel):
+    """
+    Коллекция всех карточек.
+    """
+    agents: List[AgentCard]
+
+
+agents_catalog = AgentCatalog(
+    agents=[
+        AgentCard(
+            name="TransactionAgent",
+            description="Agent for building the transaction, following the users requst",
+            tool="build_transaction_tool",
+            response="tx"
+        ),
+        AgentCard(
+            name="SmallTalkAgent",
+            description="Small talk agent for casual simple QA and jokes",
+            tool="small_talk_tool",
+            response="small_talk"
+        ),
+        AgentCard(
+            name="MetamaskRAGAgent",
+            description="MetamaskRAGAgent provides information about metamask specific QA",
+            tool="metamask_rag_tool",
+            response="rag_response"
+        ),
+    ]
+)

@@ -4,16 +4,22 @@ from pydantic_ai import Agent, Tool, RunContext
 from pydantic_ai.models.gemini import GeminiModel
 from pydantic_ai.providers.google_gla import GoogleGLAProvider
 from pydantic_ai.usage import UsageLimits
+import os 
+from dotenv import load_dotenv
 from schemas.models import (
     MessageRequest,
     SmallTalkModel,
     SupervisorModel,
     TransactionModel,
+    RagResponseModel,
     ContactsResponseModel
 )
+from utils.logger import get_logger
+from agents_framework.prompts import SMALL_TALK_PROMPT, SUPERVISOR_PROMPT, TX_AGENT_PROMPT
+from agents_framework.agents_card import agents_catalog
 
-from agent.prompts import SMALL_TALK_PROMPT, SUPERVISOR_PROMPT, TX_AGENT_PROMPT
-
+load_dotenv()
+logger = get_logger(__name__)
 
 class SupervisorAgent:
     def __init__(self, model: str, llm_token: str, logifre_token: str = None):
@@ -35,7 +41,11 @@ class SupervisorAgent:
             function=self.small_talk,
             description="tool for small talking with user",
         )
-
+        
+        metamask_rag_tool = Tool(
+            function=self.metamask_rag,
+            description="tool for MetamaskRAGAgent for Metamask QA",
+        )
         self.tx_agent = Agent(
             self.model,
             result_type=TransactionModel,
@@ -55,8 +65,8 @@ class SupervisorAgent:
         self.supervisor_agent = Agent(
             self.model,
             result_type=SupervisorModel,
-            system_prompt=SUPERVISOR_PROMPT,
-            tools=[build_transaction_tool, small_talk_tool],
+            system_prompt=SUPERVISOR_PROMPT.format(agents_catalog=str(agents_catalog.model_dump_json(indent=2))),
+            tools=[build_transaction_tool, small_talk_tool,metamask_rag_tool],
             retries=5,
             instrument=True,
         )
@@ -70,20 +80,44 @@ class SupervisorAgent:
         return response.data
 
     async def small_talk(self, message: MessageRequest) -> SmallTalkModel:
+        logger.info(message.message)
         response = await self.small_talk_agent.run(
             user_prompt=message.message,
             usage_limits=UsageLimits(response_tokens_limit=1000),
         )
+        logger.info(response)
         return response.data
 
     async def process_message(self, message: MessageRequest) -> SupervisorModel:
+        logger.info(f"deps: {message.contacts}")
+        logger.info(f"message: {message.message}")
         response = await self.supervisor_agent.run(
             user_prompt=message.message, 
             deps=message.contacts,
             usage_limits=UsageLimits(response_tokens_limit=1000),
         )
+        logger.info(response)
         return response.data
 
+    async def metamask_rag(url: str, query: MessageRequest) -> RagResponseModel:
+        url = os.getenv("RAG_URL")
+
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    url,
+                    json={
+                        "query": query.message
+                    }
+                )
+                response.raise_for_status()
+                logger.info(response.json())
+                return RagResponseModel.model_validate(response.json())
+        except httpx.RequestError as exc:
+            print(f"[Request Error] {exc}")
+        except httpx.HTTPStatusError as exc:
+            print(f"[HTTP Status Error] {exc.response.status_code}")
+        return None
 
     async def get_contacts(self, url: str, user_tg_id: int) -> ContactsResponseModel:
         url = f"{url}?user_tg_id={user_tg_id}"
@@ -94,10 +128,11 @@ class SupervisorAgent:
                 response.raise_for_status()
                 data = response.json()
                 contacts_data = data.get("data", {}).get("contacts", [])
+                logger.info(ContactsResponseModel(contacts=contacts_data))
                 return ContactsResponseModel(contacts=contacts_data)
         except httpx.RequestError as exc:
-            print(f"[Request Error] {exc}")
+            logger.info(f"[Request Error] {exc}")
         except httpx.HTTPStatusError as exc:
-            print(f"[HTTP Status Error] {exc.response.status_code}")
+             logger.info(f"[HTTP Status Error] {exc.response.status_code}")
         return None
 

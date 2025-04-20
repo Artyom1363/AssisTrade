@@ -1,6 +1,6 @@
 import os
 from schemas.models import MessageRequest
-from agent.agents import SupervisorAgent
+from agents_framework.agents import SupervisorAgent
 from dotenv import load_dotenv
 from schemas.models import SupervisorModel
 

@@ -1,5 +1,4 @@
-from typing import Literal, Optional, List
-from dataclasses import dataclass
+from typing import Literal, Optional, List, Dict
 from pydantic import BaseModel
 
 class Contact(BaseModel):
@@ -23,39 +22,48 @@ class TransactionDict(BaseModel):
     Модель для формирования транзакции
     """
 
-    to: Optional[str] = None
-    value: Optional[float] = None
-    currency: Optional[str] = None
+    to: str
+    value: float
+    currency: str
 
 
 class TransactionModel(BaseModel):
     """
-    Модель build transaction tool response
+    Модель для tx builder
     """
-
     decision: Literal["BuildTransaction", "RejectTransaction"]
     reasoning: str
-    db_match: Optional[str] = None
     transaction: Optional[TransactionDict] = None
 
 
 class SmallTalkModel(BaseModel):
     """
-    Модель для small talk с пользователем
+    Модель для ответа small talk
     """
     response: str
 
 class OffTopicModel(BaseModel):
     response: str
 
+class ImageModel(BaseModel):
+    path: str
+    title: str
+
+class RagResponseModel(BaseModel):
+    """
+    Модель для ответа RAG
+    """
+    answer: str
+    images: Optional[List[ImageModel]] = None  
+
 class SupervisorModel(BaseModel):
     """
     Модель супервизора для принятия решения о том,
     какой тул вызвать / что ответить пользователю
     """
-
     reasoning: str
-    act: Literal["build_transaction", "small_talk", "out_of_topic"]
+    act: str
     tx: Optional[TransactionModel] = None
     small_talk: Optional[SmallTalkModel] = None
     off_topic: Optional[OffTopicModel] = None
+    rag_response: Optional[RagResponseModel]=None
