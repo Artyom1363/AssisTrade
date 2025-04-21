@@ -1,25 +1,35 @@
-import logfire
+import os
+
 import httpx
-from pydantic_ai import Agent, Tool, RunContext
+import logfire
+from dotenv import load_dotenv
+from pydantic_ai import Agent, RunContext, Tool
+from pydantic_ai.common_tools.duckduckgo import duckduckgo_search_tool
 from pydantic_ai.models.gemini import GeminiModel
 from pydantic_ai.providers.google_gla import GoogleGLAProvider
 from pydantic_ai.usage import UsageLimits
-import os 
-from dotenv import load_dotenv
 from schemas.models import (
+    ContactsResponseModel,
     MessageRequest,
+    RagResponseModel,
+    SearchModel,
     SmallTalkModel,
     SupervisorModel,
     TransactionModel,
-    RagResponseModel,
-    ContactsResponseModel
 )
 from utils.logger import get_logger
-from agents_framework.prompts import SMALL_TALK_PROMPT, SUPERVISOR_PROMPT, TX_AGENT_PROMPT
-from agents_framework.agents_card import agents_catalog
+
+from agents_framework.agents_tool_card import agents_and_tool_catalog
+from agents_framework.prompts import (
+    SEARCH_PROMPT,
+    SMALL_TALK_PROMPT,
+    SUPERVISOR_PROMPT,
+    TX_AGENT_PROMPT,
+)
 
 load_dotenv()
 logger = get_logger(__name__)
+
 
 class SupervisorAgent:
     def __init__(self, model: str, llm_token: str, logifre_token: str = None):
@@ -31,17 +41,22 @@ class SupervisorAgent:
         )
         logfire.configure(token=logifre_token)
         logfire.instrument()
-        
+
         build_transaction_tool = Tool(
             function=self.build_transaction,
             description="tool to build a transaction, following the user's intent",
-            takes_ctx=True
+            takes_ctx=True,
         )
         small_talk_tool = Tool(
             function=self.small_talk,
             description="tool for small talking with user",
         )
-        
+
+        search_tool = Tool(
+            function=self.search,
+            description="tool for web search about real-time data",
+        )
+
         metamask_rag_tool = Tool(
             function=self.metamask_rag,
             description="tool for MetamaskRAGAgent for Metamask QA",
@@ -61,17 +76,36 @@ class SupervisorAgent:
             retries=5,
             instrument=True,
         )
-
-        self.supervisor_agent = Agent(
+        self.search_agent = Agent(
             self.model,
-            result_type=SupervisorModel,
-            system_prompt=SUPERVISOR_PROMPT.format(agents_catalog=str(agents_catalog.model_dump_json(indent=2))),
-            tools=[build_transaction_tool, small_talk_tool,metamask_rag_tool],
+            result_type=SearchModel,
+            system_prompt=SEARCH_PROMPT,
+            tools=[duckduckgo_search_tool()],
             retries=5,
             instrument=True,
         )
-    async def build_transaction(self, ctx: RunContext[MessageRequest], message: MessageRequest) -> TransactionModel:
-        print(f"[build_transaction] message.contacts = {ctx.deps}") 
+        self.supervisor_agent = Agent(
+            self.model,
+            result_type=SupervisorModel,
+            system_prompt=SUPERVISOR_PROMPT.format(
+                agents_and_tool_catalog=str(
+                    agents_and_tool_catalog.model_dump_json(indent=2)
+                )
+            ),
+            tools=[
+                build_transaction_tool,
+                small_talk_tool,
+                metamask_rag_tool,
+                search_tool,
+            ],
+            retries=5,
+            instrument=True,
+        )
+
+    async def build_transaction(
+        self, ctx: RunContext[MessageRequest], message: MessageRequest
+    ) -> TransactionModel:
+        print(f"[build_transaction] message.contacts = {ctx.deps}")
         response = await self.tx_agent.run(
             user_prompt=(f"user message:{message.message} contacts: {ctx.deps}"),
             usage_limits=UsageLimits(response_tokens_limit=1000),
@@ -88,28 +122,32 @@ class SupervisorAgent:
         logger.info(response)
         return response.data
 
+    async def search(self, message: MessageRequest) -> SearchModel:
+        logger.info(message.message)
+        response = await self.search_agent.run(
+            user_prompt=message.message,
+            usage_limits=UsageLimits(response_tokens_limit=1000),
+        )
+        logger.info(response)
+        return response.data
+
     async def process_message(self, message: MessageRequest) -> SupervisorModel:
         logger.info(f"deps: {message.contacts}")
         logger.info(f"message: {message.message}")
         response = await self.supervisor_agent.run(
-            user_prompt=message.message, 
+            user_prompt=message.message,
             deps=message.contacts,
             usage_limits=UsageLimits(response_tokens_limit=1000),
         )
         logger.info(response)
         return response.data
 
-    async def metamask_rag(url: str, query: MessageRequest) -> RagResponseModel:
+    async def metamask_rag(self, url: str, query: MessageRequest) -> RagResponseModel:
         url = os.getenv("RAG_URL")
 
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
-                response = await client.post(
-                    url,
-                    json={
-                        "query": query.message
-                    }
-                )
+                response = await client.post(url, json={"query": query.message})
                 response.raise_for_status()
                 logger.info(response.json())
                 return RagResponseModel.model_validate(response.json())
@@ -133,6 +171,5 @@ class SupervisorAgent:
         except httpx.RequestError as exc:
             logger.info(f"[Request Error] {exc}")
         except httpx.HTTPStatusError as exc:
-             logger.info(f"[HTTP Status Error] {exc.response.status_code}")
+            logger.info(f"[HTTP Status Error] {exc.response.status_code}")
         return None
-

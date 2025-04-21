@@ -17,7 +17,7 @@ exclude = [
     "venv",
     "build",
     "dist",
-    "src/agents/agent/prompts.py",
+    "prompts.py",
 ]
 
 target-version = "py39"
