@@ -177,3 +177,51 @@ cython_debug/
 # USERPREFS
 experiments/
 .experiments/
+
+# OS specific
+.DS_Store
+*.pem
+
+# Environment variables
+**/.env
+**/.env.local
+!**/.env.example
+!**/.env.local.example
+!**/.example.env
+
+# Python - bot directory
+bot/__pycache__/
+bot/*.py[cod]
+bot/*$py.class
+bot/.venv
+bot/venv/
+bot/.pytest_cache/
+
+# Node.js - transaction-mini-app directory
+transaction-mini-app/node_modules/
+transaction-mini-app/.pnp
+transaction-mini-app/.pnp.js
+transaction-mini-app/.npm
+
+# Next.js specific
+transaction-mini-app/.next/
+transaction-mini-app/out/
+transaction-mini-app/build/
+transaction-mini-app/.vercel/
+
+# TypeScript
+transaction-mini-app/*.tsbuildinfo
+transaction-mini-app/next-env.d.ts
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# Testing
+transaction-mini-app/coverage/
+
+# Docker
+.docker-data/
