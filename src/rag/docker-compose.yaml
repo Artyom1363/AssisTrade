@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  rag-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: metamask-rag-api
+    ports:
+      - "8001:8001"
+    volumes:
+      - /root/index:/app/data/index
+      - ./chroma_persist:/app/data/persist_dir
+      - /root/metamask_data:/app/data/metamask_data
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - rag-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+networks:
+  rag-network:
+    driver: bridge
