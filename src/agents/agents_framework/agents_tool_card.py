@@ -13,15 +13,26 @@ class AgentCard(BaseModel):
     tool: Optional[str] = None
     response: str
 
+class ToolCard(BaseModel):
+    """
+    Описание одного тула — его имя, id,
+    краткое описание и поддерживаемые действия.
+    """
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    description: Optional[str] = None
+    tool: Optional[str] = None
+    response: str
 
-class AgentCatalog(BaseModel):
+class AgentandToolCatalog(BaseModel):
     """
     Коллекция всех карточек.
     """
-    agents: List[AgentCard]
+    agents: Optional[List[AgentCard]]=None
+    tools: Optional[List[ToolCard]]=None
 
 
-agents_catalog = AgentCatalog(
+agents_and_tool_catalog = AgentandToolCatalog(
     agents=[
         AgentCard(
             name="TransactionAgent",
@@ -41,5 +52,11 @@ agents_catalog = AgentCatalog(
             tool="metamask_rag_tool",
             response="rag_response"
         ),
-    ]
+        AgentCard(
+            name="SearchAgent",
+            description="Search agent for real-time Blockchain only data QA, e.g. token actual price",
+            tool="search_tool",
+            response="search_response"
+        ),
+    ],
 )
