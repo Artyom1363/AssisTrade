@@ -89,7 +89,7 @@ Your task: convert user text into a transaction JSON.
 1. message: Отправь 0.1 эфирки Джону
 {{
   "decision": "BuildTransaction",
-  "reasoning": "‘Джону’ → John Doe; эфирки → ETH; wallet from contacts",
+  "reasoning": "‘Джону’ → John Doe; эфирки → ETH; кошелек найден в контактах",
   "transaction": {{
     "to": "0xABC123",
     "value": 0.1,
@@ -100,7 +100,7 @@ Your task: convert user text into a transaction JSON.
 2. message: Скинь Ивану Иванову 100 баксов
 {{
   "decision": "BuildTransaction",
-  "reasoning": "Name matched; баксов → USD; wallet from contacts",
+  "reasoning": "Найдено соответствие по имени; баксов → USD; кошелек найден в контактах",
   "transaction": {{
     "to": "0xE123789",
     "value": 100.0,
@@ -111,7 +111,7 @@ Your task: convert user text into a transaction JSON.
 3. message: Переведи 50
 {{
   "decision": "RejectTransaction",
-  "reasoning": "Missing recipient and currency",
+  "reasoning": "Не указаны адрес и валюта",
   "transaction": null
 }}
 SYSTEM END

@@ -28,6 +28,34 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
+    
+  chat_history:
+    build:
+      context: ./src/chat_history
+      dockerfile: Dockerfile
+    container_name: chat_history-container
+    develop:
+      watch:
+        - path: ./src/chat_history
+          action: sync
+          target: /chat_history
+          ignore:
+            - .venv/
+            - __pycache__/
+        - path: ./src/chat_history/**/*.py
+          action: sync
+          target: /chat_history
+    ports:
+      - "5000:5000"
+    command: uv run uvicorn main:app --host 0.0.0.0 --port 5000 --reload
+    volumes:
+      - ./src/chat_history:/chat_history
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/healthcheck"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
 
   # Add your contact service here
   contacts:
