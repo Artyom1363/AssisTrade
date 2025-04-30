@@ -13,8 +13,8 @@ def handle_message(message: MessageRequest, supervisor: SupervisorModel):
     save_message(
         user_tg_id=message.user_tg_id,
         message=message.message,
-        decision=tx.decision,
-        reasoning=reasoning,
+        decision=tx.decision if tx else None,
+        reasoning=reasoning ,
         tx_reasoning=tx.reasoning if tx else None,
         to_address=tx.transaction.to if tx and tx.transaction else None,
         value=tx.transaction.value if tx and tx.transaction else None,

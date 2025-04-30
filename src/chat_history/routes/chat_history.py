@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import List
-from schemas.models import MessageRequest, SupervisorModel
+from schemas.models import SaveMessageRequest
 from services.db_service import get_chat_history, handle_message
 
 router = APIRouter()
@@ -17,9 +17,9 @@ async def get_chat_history_endpoint(user_tg_id: int, limit: int = Query(3, ge=1)
 
 # Эндпоинт для сохранения сообщения
 @router.post("/save_message/")
-async def save_message_endpoint(message: MessageRequest, supervisor: SupervisorModel):
+async def save_message_endpoint(payload: SaveMessageRequest):
     try:
-        handle_message(message, supervisor)
+        handle_message(payload.message, payload.supervisor)
         return {"status": "Message saved successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

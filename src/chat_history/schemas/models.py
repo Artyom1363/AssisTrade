@@ -38,3 +38,7 @@ class SupervisorModel(BaseModel):
 
     reasoning: str
     tx: Optional[TransactionModel] = None
+
+class SaveMessageRequest(BaseModel):
+    message: MessageRequest
+    supervisor: SupervisorModel

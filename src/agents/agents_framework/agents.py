@@ -1,5 +1,4 @@
 import os
-
 import httpx
 import logfire
 from dotenv import load_dotenv
@@ -16,6 +15,8 @@ from schemas.models import (
     SmallTalkModel,
     SupervisorModel,
     TransactionModel,
+    ChatHistoryItem,
+    ChatHistoryModel
 )
 from utils.logger import get_logger
 
@@ -57,6 +58,12 @@ class SupervisorAgent:
             description="tool for web search about real-time data",
         )
 
+        chat_history_tool = Tool(
+            function=self.get_chat_history,
+            description="tool to get chat history for 3 previous messages from user",
+        )
+
+
         metamask_rag_tool = Tool(
             function=self.metamask_rag,
             description="tool for MetamaskRAGAgent for Metamask QA",
@@ -65,6 +72,7 @@ class SupervisorAgent:
             self.model,
             result_type=TransactionModel,
             system_prompt=TX_AGENT_PROMPT,
+            tools=[chat_history_tool],
             retries=5,
             instrument=True,
         )
@@ -153,7 +161,7 @@ class SupervisorAgent:
                 return RagResponseModel.model_validate(response.json())
         except httpx.RequestError as exc:
             print(f"[Request Error] {exc}")
-        except httpx.HTTPStatusError as exc:
+        except httpx.HTTPzStatusError as exc:
             print(f"[HTTP Status Error] {exc.response.status_code}")
         return None
 
@@ -172,4 +180,23 @@ class SupervisorAgent:
             logger.info(f"[Request Error] {exc}")
         except httpx.HTTPStatusError as exc:
             logger.info(f"[HTTP Status Error] {exc.response.status_code}")
+        return None
+
+    async def get_chat_history(self, message: MessageRequest, limit: int = 3) -> ChatHistoryModel | None:
+        db_server_url = os.getenv("CHAT_HISTORY_URL")
+        url = f"{db_server_url}/api/chat_history/{message.user_tg_id}?limit={limit}"
+
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.get(url)
+                response.raise_for_status()
+                data = response.json()
+                logger.info(f"Chat history for user {user_tg_id}: {data}")
+                
+                history_items = [ChatHistoryItem(**item) for item in data]
+                logger.info(f"history:\n{history_items}")
+                return ChatHistoryModel(history=history_items)
+
+        except (httpx.RequestError, httpx.HTTPStatusError, Exception) as exc:
+            logger.info(f"[Chat history error] {exc}")
         return None

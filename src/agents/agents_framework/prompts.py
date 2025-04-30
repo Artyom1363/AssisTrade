@@ -80,6 +80,10 @@ Your task: convert user text into a transaction JSON.
 4. Match names via declension (e.g., “Ивану” → “Иван Иванов”).
 5. If to, value, currency missing, or contact not found → RejectTransaction.
 
+# Tool catalog:
+-chat-history-tool
+use this tool if user missed any data in tx. It will help you to find missing values sometimes
+
 # Input:
 - message: user text
 - contacts: list of { contact_name, wallet_id }

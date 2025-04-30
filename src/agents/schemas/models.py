@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class Contact(BaseModel):
-    user_tg_id: str
+    user_tg_id: int
     contact_name: str
     wallet_id: str
 
@@ -91,3 +91,21 @@ class SupervisorModel(BaseModel):
     rag_response: Optional[RagResponseModel] = None
     search_response: Optional[SearchModel] = None
     off_topic: Optional[OffTopicModel] = None
+
+
+class SaveMessageRequest(BaseModel):
+    message: MessageRequest
+    supervisor: SupervisorModel
+
+class ChatHistoryItem(BaseModel):
+    message: str
+    decision: str
+    reasoning: str
+    tx_reasoning: Optional[str] = None
+    to_address: Optional[str] = None
+    value: Optional[float] = None
+    currency: Optional[str] = None
+
+
+class ChatHistoryModel(BaseModel):
+    history: List[ChatHistoryItem]    
