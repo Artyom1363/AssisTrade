@@ -26,7 +26,8 @@ Added your current dir to PYTHONPATH
 export PYTHONPATH=`pwd`
 ```
 
-Download acutal docs from metamask
+Download acutal docs from metamask using script or from [here](https://drive.google.com/file/d/1cpcp4WnIIqEUWHZhJNZmIt-_wrHCLfTw/view?usp=sharing)
+
 ```
 python3 src/parsing/scrap_metamask.py
 ```
