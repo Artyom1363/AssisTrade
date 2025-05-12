@@ -49,6 +49,28 @@ services:
       timeout: 30s
       retries: 3
 
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    container_name: nlp_crypto_bot
+    restart: unless-stopped
+    env_file:
+      - ./bot/.env
+
+  telegram-mini-app:
+    build:
+      context: ./transaction-mini-app
+      dockerfile: Dockerfile
+    container_name: transaction-mini-app
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
+    env_file:
+      - ./transaction-mini-app/.env.local
+
 # Add the volume for contacts database
 volumes:
   contacts-db-data:
