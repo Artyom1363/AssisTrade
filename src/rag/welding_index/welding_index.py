@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 # Constants
 DEFAULT_CHUNK_SIZE = 1000
 DEFAULT_CHUNK_OVERLAP = 200
-DEFAULT_MODEL_NAME = "cointegrated/rubert-tiny2"  # Russian BERT model
+DEFAULT_MODEL_NAME = "deepvk/USER-bge-m3"
 
 class DocumentationPreprocessor:
     def __init__(self, 

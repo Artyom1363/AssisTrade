@@ -1,0 +1,188 @@
+{
+  "1": {
+    "question": "Как установить MetaMask на мой браузер?",
+    "relevant_chunks": [
+      "aa55d15270e7893ed4107b19f2717e5f_chunk_1",
+      "aa55d15270e7893ed4107b19f2717e5f_chunk_2", 
+      "aa55d15270e7893ed4107b19f2717e5f_chunk_3",
+      "06e55877c8aa90d41aeae3e98fe6e38f_chunk_1",
+      "06e55877c8aa90d41aeae3e98fe6e38f_chunk_2",
+      "06e55877c8aa90d41aeae3e98fe6e38f_chunk_3"
+    ]
+  },
+  "2": {
+    "question": "Как установить мобильное приложение MetaMask?",
+    "relevant_chunks": [
+      "aa55d15270e7893ed4107b19f2717e5f_chunk_5",
+      "06e55877c8aa90d41aeae3e98fe6e38f_chunk_5"
+    ]
+  },
+  "3": {
+    "question": "Что такое сид-фраза и зачем она нужна?",
+    "relevant_chunks": [
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_1",
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_2",
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_3",
+      "2695d8cbe9861b7d3fc4a2499cee5dbb_chunk_1"
+    ]
+  },
+  "4": {
+    "question": "Почему MetaMask просит меня записать секретные слова?",
+    "relevant_chunks": [
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_3",
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_4",
+      "2695d8cbe9861b7d3fc4a2499cee5dbb_chunk_1"
+    ]
+  },
+  "5": {
+    "question": "Как безопасно хранить мою сид-фразу от MetaMask?",
+    "relevant_chunks": [
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_6",
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_7",
+      "2695d8cbe9861b7d3fc4a2499cee5dbb_chunk_1",
+      "ce0da48ea9df6abe17f05db2594c97ef_chunk_1"
+    ]
+  },
+  "6": {
+    "question": "Нужно ли фотографировать экран с секретной фразой?",
+    "relevant_chunks": [
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_6",
+      "2695d8cbe9861b7d3fc4a2499cee5dbb_chunk_1"
+    ]
+  },
+  "7": {
+    "question": "Каким должен быть надежный пароль для MetaMask?",
+    "relevant_chunks": [
+      "ce0da48ea9df6abe17f05db2594c97ef_chunk_0"
+    ]
+  },
+  "8": {
+    "question": "Как импортировать существующий кошелек в MetaMask?",
+    "relevant_chunks": [
+      "bee9a51d034752cef7e3aaa94f5f7687_chunk_0",
+      "bee9a51d034752cef7e3aaa94f5f7687_chunk_1",
+      "bee9a51d034752cef7e3aaa94f5f7687_chunk_2",
+      "e27e904874477bba7b8739870bef1922_chunk_1"
+    ]
+  },
+  "9": {
+    "question": "Где находится мой адрес кошелька в MetaMask?",
+    "relevant_chunks": [
+      "35d3d1b99b83dc25cf8eac578705046c_chunk_0",
+      "cd7a1e2776fe017b1170f0e34d8f2d5d_chunk_0"
+    ]
+  },
+  "10": {
+    "question": "Как скопировать адрес моего кошелька?",
+    "relevant_chunks": [
+      "35d3d1b99b83dc25cf8eac578705046c_chunk_0"
+    ]
+  },
+  "11": {
+    "question": "Как добавить второй кошелек в MetaMask?",
+    "relevant_chunks": [
+      "bee9a51d034752cef7e3aaa94f5f7687_chunk_2",
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_5"
+    ]
+  },
+  "12": {
+    "question": "Как закрепить расширение MetaMask в браузере для быстрого доступа?",
+    "relevant_chunks": [
+      "aa55d15270e7893ed4107b19f2717e5f_chunk_1",
+      "aa55d15270e7893ed4107b19f2717e5f_chunk_3",
+      "06e55877c8aa90d41aeae3e98fe6e38f_chunk_1",
+      "06e55877c8aa90d41aeae3e98fe6e38f_chunk_3"
+    ]
+  },
+  "13": {
+    "question": "Что означает запрос на подпись сообщения в MetaMask?",
+    "relevant_chunks": [
+      "c79d71ec49cb9417eb1f9c87510d616d_chunk_0",
+      "c79d71ec49cb9417eb1f9c87510d616d_chunk_1",
+      "c79d71ec49cb9417eb1f9c87510d616d_chunk_2"
+    ]
+  },
+  "14": {
+    "question": "Что означает 'Gas Limit' и 'Gas Price' при отправке транзакции?",
+    "relevant_chunks": [
+      "0927440bd27fef169f064fd129b59828_chunk_9",
+      "0927440bd27fef169f064fd129b59828_chunk_10"
+    ]
+  },
+  "15": {
+    "question": "Как проверить статус моей транзакции?",
+    "relevant_chunks": [
+      "613ffbdee003bb654d6a28e684e95601_chunk_0",
+      "613ffbdee003bb654d6a28e684e95601_chunk_1"
+    ]
+  },
+  "16": {
+    "question": "Где посмотреть историю транзакций в MetaMask?",
+    "relevant_chunks": [
+      "613ffbdee003bb654d6a28e684e95601_chunk_0",
+      "613ffbdee003bb654d6a28e684e95601_chunk_1"
+    ]
+  },
+  "17": {
+    "question": "Как поделиться адресом моего кошелька для получения средств?",
+    "relevant_chunks": [
+      "35d3d1b99b83dc25cf8eac578705046c_chunk_0"
+    ]
+  },
+  "18": {
+    "question": "Почему не стоит хранить сид-фразу в цифровом виде?",
+    "relevant_chunks": [
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_6",
+      "2695d8cbe9861b7d3fc4a2499cee5dbb_chunk_1"
+    ]
+  },
+  "19": {
+    "question": "Что делать, если я забыл пароль от MetaMask, но у меня есть сид-фраза?",
+    "relevant_chunks": [
+      "2695d8cbe9861b7d3fc4a2499cee5dbb_chunk_4",
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_4",
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_5"
+    ]
+  },
+  "20": {
+    "question": "Как проверить, что я скачал официальное приложение MetaMask?",
+    "relevant_chunks": [
+      "aa55d15270e7893ed4107b19f2717e5f_chunk_4",
+      "06e55877c8aa90d41aeae3e98fe6e38f_chunk_4"
+    ]
+  },
+  "21": {
+    "question": "Почему MetaMask запрашивает разрешение на 'view account information'?",
+    "relevant_chunks": [
+      "7eb4199a3a4b5f27c11dab935428278b_chunk_0",
+      "7eb4199a3a4b5f27c11dab935428278b_chunk_1",
+      "7eb4199a3a4b5f27c11dab935428278b_chunk_4",
+      "aa55d15270e7893ed4107b19f2717e5f_chunk_7",
+      "06e55877c8aa90d41aeae3e98fe6e38f_chunk_7"
+    ]
+  },
+  "22": {
+    "question": "Как отследить активность моего кошелька на блокчейн-эксплорере?",
+    "relevant_chunks": [
+      "613ffbdee003bb654d6a28e684e95601_chunk_0",
+      "613ffbdee003bb654d6a28e684e95601_chunk_2",
+      "613ffbdee003bb654d6a28e684e95601_chunk_3"
+    ]
+  },
+  "23": {
+    "question": "Как импортировать приватный ключ в MetaMask?",
+    "relevant_chunks": [
+      "bee9a51d034752cef7e3aaa94f5f7687_chunk_2",
+      "bee9a51d034752cef7e3aaa94f5f7687_chunk_3",
+      "fcccf5489abbac0c749a12eaecde8b73_chunk_9"
+    ]
+  },
+  "24": {
+    "question": "Как использовать встроенный браузер в мобильном приложении MetaMask?",
+    "relevant_chunks": [
+      "0ef1056b09cb63062cfb6028d384351b_chunk_0",
+      "0ef1056b09cb63062cfb6028d384351b_chunk_1",
+      "0ef1056b09cb63062cfb6028d384351b_chunk_2"
+    ]
+  }
+}
