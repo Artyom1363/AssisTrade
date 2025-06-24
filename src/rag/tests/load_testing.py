@@ -100,3 +100,4 @@ class RAGStressUser(HttpUser):
 
 
 # locust -f test.py RAGSystemUser --host=http://45.81.35.238:8001/ --users 3 --spawn-rate 1 --run-time 1m --headless --csv=rag_system_user_test_final
+# locust -f test.py RAGStressUser --host=http://45.81.35.238:8001/ --users 5 --spawn-rate 1 --run-time 1m --headless --csv=rag_stress_user_test_final
