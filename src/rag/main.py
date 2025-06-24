@@ -248,6 +248,7 @@ class DocumentationRAG:
             return {
                 "answer": "I couldn't find relevant information in the documentation. Please try rephrasing your question.",
                 "relevant_chunks": [],
+                "chunk_ids": [],
                 "images": []
             }
         
