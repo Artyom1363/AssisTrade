@@ -6,6 +6,7 @@ with external APIs to generate responses.
 
 import os
 import json
+import time
 import logging
 import argparse
 from dotenv import load_dotenv
@@ -30,7 +31,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Constants
-DEFAULT_MODEL_NAME = "cointegrated/rubert-tiny2"  # Russian BERT model
+DEFAULT_MODEL_NAME = "deepvk/USER-bge-m3"  # Russian BERT model
 
 # Initialize FastAPI app
 app = FastAPI(title="Documentation RAG API")
@@ -44,6 +45,7 @@ class QueryRequest(BaseModel):
 class QueryResponse(BaseModel):
     answer: str
     relevant_chunks: List[str]
+    chunk_ids: List[str]
     images: List[Dict[str, str]]
 
 class AppConfig(BaseModel):
@@ -104,9 +106,17 @@ class DocumentationRAG:
             Embedding vector as a list of floats
         """
         # Tokenize and get model output
+        start_time = time.time()
+            
         inputs = self.tokenizer(query, return_tensors='pt', padding=True, truncation=True, max_length=512)
         with torch.no_grad():
             outputs = self.model(**inputs)
+        # response = self.session.post(self.endpoint, json=payload)
+        end_time = time.time()
+        with open('inf_time.txt', 'a') as file:
+            file.write(f'{end_time - start_time}\n')
+        logger.info(f'query embedding time is: {end_time - start_time}')
+
         
         # Use CLS token embedding as the representation
         embeddings = outputs.last_hidden_state[:, 0, :].numpy()
@@ -243,6 +253,7 @@ class DocumentationRAG:
         
         # 2. Extract relevant chunks and images
         chunks = db_results["chunks"]["documents"][0]
+        chunk_ids = db_results["chunks"]["ids"][0]
         images = db_results["images"]
         
         # 3. Generate response
@@ -260,6 +271,7 @@ class DocumentationRAG:
         response = {
             "answer": answer,
             "relevant_chunks": chunks,
+            "chunk_ids": chunk_ids,
             "images": processed_images
         }
         
